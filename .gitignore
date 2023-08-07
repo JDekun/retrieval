@@ -1,7 +1,9 @@
 # custom
 docs/
 models/
-my_faiss_index/
+datastores/
+
+temp/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

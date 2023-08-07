@@ -56,7 +56,7 @@ def general_embedding(base_folder_path):
     print("Main Vector database created. Start iteration and merging...")
     for i in range(1,num_of_docs):
         print(doc_list[i])
-        print(f"loop position {i}")
+        print(f"loop position {i}/{num_of_docs}")
         loader = PyPDFLoader(os.path.join(base_folder_path, doc_list[i]))
         start = datetime.datetime.now() 
         docs = loader.load()
@@ -79,10 +79,10 @@ def general_embedding(base_folder_path):
     print("Saving Merged Database Locally")
 
     # 保存datastores
-    db0.save_local("my_faiss_index")
+    db0.save_local("datastores")
 
     print("-----------------------------------")
-    print("merged database saved as my_faiss_index")
+    print("merged database saved as datastores")
     general_end = datetime.datetime.now() 
     general_elapsed = general_end - general_start 
     print(f"All indexing completed in {general_elapsed}")
@@ -97,7 +97,7 @@ def update_embedding(update_folder_path):
     num_of_docs = len(doc_list)
 
     # 加载datastores
-    db0 = FAISS.load_local("my_faiss_index", embeddings)
+    db0 = FAISS.load_local("datastores", embeddings)
 
     # create a loader for the PDFs from the path
     start = datetime.datetime.now() 
@@ -105,7 +105,7 @@ def update_embedding(update_folder_path):
     print("Base Vector database loaded. Start iteration and updating...")
     for i in range(0,num_of_docs):
         print(doc_list[i])
-        print(f"loop position {i}")
+        print(f"loop position {i}/{num_of_docs}")
         loader = PyPDFLoader(os.path.join(update_folder_path, doc_list[i]))
         start = datetime.datetime.now() 
         docs = loader.load()
@@ -128,10 +128,10 @@ def update_embedding(update_folder_path):
     print("Saving Merged Database Locally")
 
     # 保存datastores
-    db0.save_local("my_faiss_index")
+    db0.save_local("datastores")
 
     print("-----------------------------------")
-    print("merged database saved as my_faiss_index")
+    print("merged database saved as datastores")
     general_end = datetime.datetime.now() 
     general_elapsed = general_end - start 
     print(f"All indexing completed in {general_elapsed}")
