@@ -1,9 +1,7 @@
 # custom
 docs/
-models/
+models
 datastores/
-
-temp/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

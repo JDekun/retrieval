@@ -9,9 +9,9 @@ from langchain.vectorstores.faiss import FAISS
 from embedding import general_embedding, update_embedding
 import os
 
-gpt4all_path = './models/gpt4all-converted.bin' 
+gpt4all_path = '../models/ggml-gpt4all-j-v1.3-groovy.bin' 
 # gpt4all_path = './models/wizardlm-13b-v1.1-superhot-8k.ggmlv3.q4_0.bin' 
-llama_path = './models/ggml-model-q4_0.bin' 
+llama_path = '../models/ggml-model-q4_0.bin' 
 
 
 # 定义嵌入式模型embedding

@@ -1,6 +1,6 @@
 from langchain import PromptTemplate, LLMChain
 from langchain.llms import GPT4All
-from langchain.callbacks.manager import CallbackManager
+from langchain.callbacks.base import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 # function for loading only TXT files
 from langchain.document_loaders import TextLoader
