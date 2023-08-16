@@ -1,6 +1,6 @@
 from langchain import PromptTemplate, LLMChain
 from langchain.llms import GPT4All
-from langchain.callbacks.manager import CallbackManager
+from langchain.callbacks.base import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 # function for loading only TXT files
 from langchain.document_loaders import TextLoader
@@ -36,10 +36,10 @@ def create_index(chunks, embeddings):
     return search_index
 
 
-def general_embedding(base_folder_path, embedding_path):
+def general_embedding(base_folder_path):
     # 定义嵌入式模型embedding
-
-    embeddings = LlamaCppEmbeddings(model_path=embedding_path)
+    llama_path = './models/ggml-model-q4_0.bin' 
+    embeddings = LlamaCppEmbeddings(model_path=llama_path)
 
     doc_list = [s for s in os.listdir(base_folder_path) if s.endswith('.pdf')]
     num_of_docs = len(doc_list)
@@ -88,10 +88,10 @@ def general_embedding(base_folder_path, embedding_path):
     print(f"All indexing completed in {general_elapsed}")
     print("-----------------------------------")
     
-def update_embedding(update_folder_path, embedding_path):
+def update_embedding(update_folder_path):
     # 定义嵌入式模型embedding
- 
-    embeddings = LlamaCppEmbeddings(model_path=embedding_path)
+    llama_path = './models/ggml-model-q4_0.bin' 
+    embeddings = LlamaCppEmbeddings(model_path=llama_path)
 
     doc_list = [s for s in os.listdir(update_folder_path) if s.endswith('.pdf')]
     num_of_docs = len(doc_list)
