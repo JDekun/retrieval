@@ -1,5 +1,5 @@
-from langchain.llms import GPT4All
-from langchain.embeddings import GPT4AllEmbeddings
+from langchain.llms import LlamaCpp
+from langchain.embeddings import LlamaCppEmbeddings
 
 from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
@@ -10,27 +10,51 @@ from embedding import general_embedding, update_embedding
 from langchain import PromptTemplate, LLMChain
 import os
 
+os.environ["CUDA_VISIBLE_DEVICES"] = '2'
+from langchain import HuggingFacePipeline
+import torch
+
 
 # 定义大语言模型LLMs
+n_gpu_layers = 1  # Metal set to 1 is enough.
+n_batch = 512  # Should be between 1 and n_ctx, consider the amount of RAM of your Apple Silicon Chip.
 callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
-gpt4all_path = './models/ggml-gpt4all-j-v1.3-groovy.bin' 
-llm = GPT4All(model=gpt4all_path, callback_manager=callback_manager, verbose=True)
 
-# 定义嵌入式模型embedding
-# embeddings = GPT4AllEmbeddings()
+# model_path="./models/llama-2-7b-chat.ggmlv3.q8_0.bin"
+# llm = LlamaCpp(
+#     model_path=model_path,
+#     n_gpu_layers=n_gpu_layers,
+#     n_batch=n_batch,
+#     n_ctx=2048,
+#     f16_kv=True,  # MUST set to True, otherwise you will run into problem after a couple of calls
+#     callback_manager=callback_manager,
+#     verbose=True,
+# )
 
-from langchain.embeddings import LlamaCppEmbeddings
-llama_path = './models/ggml-model-q4_0.bin' 
-embeddings = LlamaCppEmbeddings(model_path=llama_path)
+model_path ="./models/chinese-llama-2-7b"
+llm = HuggingFacePipeline.from_model_id(model_id=model_path,
+        task="text-generation",
+        device=0,
+        model_kwargs={
+                        "torch_dtype" : torch.float16,
+                        "low_cpu_mem_usage" : True,
+                        "temperature": 0.2,
+                        "max_length": 1000,
+                        "repetition_penalty":1.1}
+        )
+
+# 定义嵌入式模型embeddin# embedding
+embedding_path = "./models/llama-2-7b-chat.ggmlv3.q8_0.bin"
+embeddings = LlamaCppEmbeddings(model_path=embedding_path)
 
 # 生成datastores
 base_folder_path = './docs/base'
 update_folder_path = './docs/update'
 updata = True
 if not os.path.exists("datastores"):
-    general_embedding(base_folder_path)
+    general_embedding(base_folder_path, embedding_path)
 elif os.listdir(update_folder_path):
-    update_embedding(update_folder_path)
+    update_embedding(update_folder_path, embedding_path)
 
 
 def similarity_search(query, index):
@@ -62,5 +86,4 @@ chat = ConversationalRetrievalChain.from_llm(llm, retriever=index.as_retriever()
 
 while True:
     question = input("Your question: ")
-    # question = "What is a PLC and what is the difference with a PC?"
     print(chat.run({"question": question}))

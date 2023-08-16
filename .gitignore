@@ -3,6 +3,9 @@ docs/
 models
 datastores/
 
+backup/
+langchian/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

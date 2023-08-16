@@ -36,10 +36,10 @@ def create_index(chunks, embeddings):
     return search_index
 
 
-def general_embedding(base_folder_path):
+def general_embedding(base_folder_path, embedding_path):
     # 定义嵌入式模型embedding
-    llama_path = './models/ggml-model-q4_0.bin' 
-    embeddings = LlamaCppEmbeddings(model_path=llama_path)
+
+    embeddings = LlamaCppEmbeddings(model_path=embedding_path)
 
     doc_list = [s for s in os.listdir(base_folder_path) if s.endswith('.pdf')]
     num_of_docs = len(doc_list)
@@ -88,10 +88,10 @@ def general_embedding(base_folder_path):
     print(f"All indexing completed in {general_elapsed}")
     print("-----------------------------------")
     
-def update_embedding(update_folder_path):
+def update_embedding(update_folder_path, embedding_path):
     # 定义嵌入式模型embedding
-    llama_path = './models/ggml-model-q4_0.bin' 
-    embeddings = LlamaCppEmbeddings(model_path=llama_path)
+ 
+    embeddings = LlamaCppEmbeddings(model_path=embedding_path)
 
     doc_list = [s for s in os.listdir(update_folder_path) if s.endswith('.pdf')]
     num_of_docs = len(doc_list)
